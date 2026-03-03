@@ -1,0 +1,33 @@
+# Venv
+pharmarag-venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Données (trop lourdes pour git)
+data/raw/
+data/processed/
+
+# Credentials
+.env
+
+# ChromaDB (index local)
+data/embeddings/
+
+# HuggingFace cache
+.cache/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Tests
+.pytest_cache/
+.coverage
