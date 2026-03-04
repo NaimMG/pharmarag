@@ -1,0 +1,69 @@
+version: "3.9"
+
+# ╔══════════════════════════════════════════════════════╗
+# ║         PharmaRAG — Docker Compose                   ║
+# ║  Lance tout le projet en une seule commande :        ║
+# ║  docker-compose up                                   ║
+# ╚══════════════════════════════════════════════════════╝
+
+services:
+
+  # ── 1. ChromaDB — Vector Store ───────────────────────
+  chromadb:
+    image: chromadb/chroma:0.5.3
+    container_name: pharmarag_chromadb
+    volumes:
+      - ./data/embeddings:/chroma/chroma
+    ports:
+      - "8001:8000"
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── 2. FastAPI Backend ───────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    container_name: pharmarag_api
+    volumes:
+      - ./data:/app/data
+      - ./src:/app/src
+    ports:
+      - "8000:8000"
+    environment:
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - LLM_MODEL=llama3.2
+      - EMBEDDING_MODEL=dmis-lab/biobert-base-cased-v1.2
+    depends_on:
+      chromadb:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── 3. Streamlit Frontend ────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    container_name: pharmarag_frontend
+    volumes:
+      - ./src/ui:/app/src/ui
+    ports:
+      - "8501:8501"
+    environment:
+      - API_BASE_URL=http://api:8000
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  chroma_data:
+    driver: local
