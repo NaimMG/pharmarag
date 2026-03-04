@@ -1,0 +1,42 @@
+[
+  {
+    "question": "What are the most serious adverse reactions reported for ibuprofen?",
+    "ground_truth": "Ibuprofen is associated with serious adverse reactions including gastrointestinal bleeding, hospitalization, and life-threatening events according to FDA FAERS reports."
+  },
+  {
+    "question": "Are there fatal outcomes associated with aspirin in FDA FAERS reports?",
+    "ground_truth": "FDA FAERS reports include cases of fatal outcomes associated with aspirin, including deaths and life-threatening events such as gastrointestinal bleeding and cardiovascular events."
+  },
+  {
+    "question": "What hospitalizations are linked to amoxicillin adverse events?",
+    "ground_truth": "Amoxicillin is associated with hospitalizations due to adverse reactions including allergic reactions, anaphylaxis, and gastrointestinal disturbances according to FDA FAERS data."
+  },
+  {
+    "question": "What does scientific literature say about metformin side effects?",
+    "ground_truth": "Scientific literature reports that metformin side effects include gastrointestinal disorders such as nausea, diarrhea, and lactic acidosis in rare cases."
+  },
+  {
+    "question": "What adverse reactions are reported for atorvastatin?",
+    "ground_truth": "Atorvastatin adverse reactions include myopathy, liver injury, rhabdomyolysis, and gastrointestinal disorders according to FDA FAERS and PubMed literature."
+  },
+  {
+    "question": "What are the most common adverse drug reactions for aspirin in COPD patients?",
+    "ground_truth": "In COPD patients, aspirin is associated with gastrointestinal bleeding, peptic ulcers, and bronchospasm as the most frequently reported adverse drug reactions."
+  },
+  {
+    "question": "What life-threatening events are associated with ibuprofen?",
+    "ground_truth": "Life-threatening events associated with ibuprofen include severe gastrointestinal bleeding, renal failure, and cardiovascular events reported in FDA FAERS."
+  },
+  {
+    "question": "What are the adverse reactions of statins according to clinical studies?",
+    "ground_truth": "Statins are associated with myopathy, liver injury, rhabdomyolysis, and drug-induced liver injury according to clinical studies, with atorvastatin and simvastatin having the highest risk."
+  },
+  {
+    "question": "What serious adverse events are reported for metformin in FDA FAERS?",
+    "ground_truth": "Serious adverse events for metformin in FDA FAERS include lactic acidosis, hospitalization, and renal impairment."
+  },
+  {
+    "question": "What desensitization protocols exist for amoxicillin allergic reactions?",
+    "ground_truth": "Rapid desensitization protocols for amoxicillin allow treatment of allergic patients through oral challenge without prior skin testing, with 50% of patients having their ADR label removed."
+  }
+]
