@@ -1,0 +1,87 @@
+# ╔══════════════════════════════════════════════════════╗
+# ║         PharmaRAG — Configuration centrale           ║
+# ║  Tous les paramètres du projet en un seul endroit    ║
+# ╚══════════════════════════════════════════════════════╝
+
+# ── Données ─────────────────────────────────────────────
+data:
+  raw_faers_dir:   "data/raw/faers"
+  raw_pubmed_dir:  "data/raw/pubmed"
+  processed_dir:   "data/processed"
+  embeddings_dir:  "data/embeddings"
+  eval_dir:        "data/eval"
+
+# ── Ingestion FDA FAERS ──────────────────────────────────
+faers:
+  base_url:        "https://api.fda.gov/drug/event.json"
+  limit_per_drug:  100
+  target_drugs:
+    - "ibuprofen"
+    - "metformin"
+    - "atorvastatin"
+    - "amoxicillin"
+    - "aspirin"
+
+# ── Ingestion PubMed ─────────────────────────────────────
+pubmed:
+  search_url:      "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+  fetch_url:       "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+  max_results:     50
+  queries:
+    - "ibuprofen adverse effects"
+    - "metformin side effects"
+    - "atorvastatin adverse reactions"
+    - "amoxicillin adverse effects"
+    - "aspirin adverse reactions"
+
+# ── Preprocessing ────────────────────────────────────────
+preprocessing:
+  chunk_size:      512
+  chunk_overlap:   50
+  separators:
+    - "\n\n"
+    - "\n"
+    - ". "
+    - " "
+    - ""
+
+# ── Embeddings ───────────────────────────────────────────
+embeddings:
+  model:           "dmis-lab/biobert-base-cased-v1.2"
+  device:          "cpu"
+  batch_size:      32
+  dimensions:      768
+
+# ── ChromaDB ─────────────────────────────────────────────
+chromadb:
+  host:            "localhost"
+  port:            8001
+  collection:      "pharmavigilance"
+  distance:        "cosine"
+
+# ── LLM ─────────────────────────────────────────────────
+llm:
+  model:           "llama3.2"
+  base_url:        "http://localhost:11434"
+  temperature:     0.1
+  max_tokens:      1024
+
+# ── Retrieval ────────────────────────────────────────────
+retrieval:
+  top_k:           5
+  score_threshold: 0.0
+
+# ── API ──────────────────────────────────────────────────
+api:
+  host:            "0.0.0.0"
+  port:            8000
+  max_question_length: 500
+
+# ── Evaluation ───────────────────────────────────────────
+evaluation:
+  test_questions_path: "data/eval/test_questions.json"
+  metrics:
+    - "faithfulness"
+    - "answer_relevancy"
+    - "context_recall"
+    - "context_precision"
