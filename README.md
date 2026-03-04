@@ -2,7 +2,7 @@
 
 > Système RAG (Retrieval-Augmented Generation) appliqué à la pharmacovigilance.  
 > Interrogez en langage naturel des milliers de rapports FDA FAERS et publications PubMed.  
-> Stack 100% open-source — 0€ d'infrastructure.
+> Stack 100% open-source
 
 ---
 
@@ -188,6 +188,6 @@ pytest tests/test_api.py -v
 ## 👤 Auteur
 
 **Naim** — Étudiant ingénieur Data & IA  
-Projet portfolio · Stack 100% open-source · 0€ d'infrastructure
+Projet portfolio · Stack 100% open-source
 
 [![GitHub](https://img.shields.io/badge/GitHub-NaimMG-black?logo=github)](https://github.com/NaimMG/pharmarag)
