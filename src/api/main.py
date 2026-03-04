@@ -17,6 +17,8 @@ from loguru import logger
 
 from src.generation.rag_chain import PharmaRAGChain
 
+from src.api.monitoring import monitor, timer
+import time
 # ── Modèles Pydantic ────────────────────────────────────
 
 class QueryRequest(BaseModel):
@@ -126,11 +128,6 @@ async def health():
 
 @app.post("/query", response_model=QueryResponse)
 async def query(request: QueryRequest):
-    """
-    Pose une question à la RAG Chain.
-    Retourne la réponse générée par Llama3.2
-    et les sources FDA FAERS / PubMed utilisées.
-    """
     if rag_chain is None:
         raise HTTPException(status_code=503, detail="RAG Chain non initialisée")
 
@@ -142,7 +139,10 @@ async def query(request: QueryRequest):
 
     try:
         logger.info(f"Query reçue : {request.question}")
-        result = rag_chain.query(request.question)
+
+        start_time = time.time()
+        result     = rag_chain.query(request.question)
+        elapsed    = time.time() - start_time
 
         sources = [
             SourceModel(
@@ -150,10 +150,19 @@ async def query(request: QueryRequest):
                 drug      = s.get("drug", ""),
                 report_id = s.get("report_id", ""),
                 pmid      = s.get("pmid", ""),
-                text      = s.get("text", "")[:300],  # Limiter la taille
+                text      = s.get("text", "")[:300],
             )
             for s in result["sources"]
         ]
+
+        # Log dans SQLite
+        monitor.log_query(
+            question      = request.question,
+            answer        = result["answer"],
+            sources       = result["sources"],
+            response_time = elapsed,
+            status        = "success",
+        )
 
         return QueryResponse(
             question      = result["question"],
@@ -163,6 +172,13 @@ async def query(request: QueryRequest):
         )
 
     except Exception as e:
+        monitor.log_query(
+            question      = request.question,
+            answer        = "",
+            sources       = [],
+            response_time = 0.0,
+            status        = "error",
+        )
         logger.error(f"Erreur query : {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -181,6 +197,12 @@ async def stats():
         )
     except Exception as e:
         raise HTTPException(status_code=503, detail=str(e))
+
+
+@app.get("/monitoring")
+async def monitoring_stats():
+    """Retourne les statistiques de monitoring des requêtes."""
+    return monitor.get_stats()
 
 
 # ── Point d'entrée direct ───────────────────────────────
